@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DeepFake Detective - About</title>
+    <style>
+        /* Reset and base styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+       
+        body {
+            background-color: #f5f5f5;
+        }
+       
+        /* Navigation bar */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #3366ff;
+            padding: 1rem 2rem;
+            color: white;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+       
+        .nav-logo {
+            display: flex;
+            align-items: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+       
+        .nav-logo svg {
+            margin-right: 10px;
+        }
+       
+        .nav-links {
+            display: flex;
+            gap: 1.5rem;
+        }
+       
+        .nav-link {
+            color: white;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+       
+        /* Main content */
+        .main-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+            text-align: center;
+        }
+       
+        .main-title {
+            font-size: 2.5rem;
+            color: #222;
+            margin-bottom: 1rem;
+        }
+       
+        .subtitle {
+            font-size: 1.2rem;
+            color: #555;
+            margin-bottom: 3rem;
+        }
+       
+        .about-section {
+            background-color: white;
+            border-radius: 8px;
+            padding: 2rem;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            margin-bottom: 2rem;
+        }
+       
+        .section-title {
+            font-size: 1.8rem;
+            color: #3366ff;
+            margin-bottom: 1.5rem;
+        }
+        .no-bullets {
+            list-style-type: none; /* Removes numbering */
+            padding-left: 0; /* Optional: Reset default padding */
+        }
+
+        .features-list {
+            margin-top: 1rem;
+            padding-left: 1.5rem;
+            color: #555;
+            line-height: 1.6;   
+        }
+       
+        .section-content {
+            color: #555;
+            line-height: 1.6;
+            margin-bottom: 2rem;
+        }
+       
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+       
+        .benefit-card {
+            background: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: 8px;
+            text-align: left;
+        }
+       
+        .benefit-title {
+            font-size: 1.2rem;
+            color: #3366ff;
+            margin-bottom: 1rem;
+        }
+       
+        .benefit-description {
+            color: #666;
+            line-height: 1.5;
+        }
+        
+        
+       
+        @media (max-width: 768px) {
+            .benefits-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="nav-logo">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 22C6.5 22 2 17.5 2 12C2 6.5 6.5 2 12 2C17.5 2 22 6.5 22 12C22 17.5 17.5 22 12 22Z" stroke="white" stroke-width="2"/>
+                <path d="M12 16C9.8 16 8 14.2 8 12C8 9.8 9.8 8 12 8C14.2 8 16 9.8 16 12C16 14.2 14.2 16 12 16Z" stroke="white" stroke-width="2"/>
+            </svg>
+            <a href="index.html" style="color: white; text-decoration: none;">DeepFake Detective</a>
+        </div>
+        <div class="nav-links">
+            <a href="image.html" class="nav-link">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="4" y="4" width="16" height="16" rx="2" stroke="white" stroke-width="2"/>
+                    <circle cx="9" cy="9" r="2" stroke="white" stroke-width="2"/>
+                    <path d="M20 16L15 11L4 20" stroke="white" stroke-width="2"/>
+                </svg>
+                <span>Image Detection</span>
+            </a>
+            <a href="video.html" class="nav-link">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="4" y="4" width="16" height="16" rx="2" stroke="white" stroke-width="2"/>
+                    <path d="M10 9L15 12L10 15V9Z" stroke="white" stroke-width="2"/>
+                </svg>
+                <span>Video Detection</span>
+            </a>
+            <a href="about.html" class="nav-link active">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="12" cy="12" r="10" stroke="white" stroke-width="2"/>
+                    <path d="M12 8V12M12 16V16" stroke="white" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+                <span>About</span>
+            </a>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <h1 class="main-title">About DeepFake Detective</h1>
+        <p class="subtitle">Empowering Truth in the Digital Age</p>
+
+        <div class="about-section">
+            <h2 class="section-title">Our Mission</h2>
+            <div class="section-content">
+                <p>DeepFake Detective is committed to maintaining digital integrity in an age of rapidly evolving AI technology. Our mission is to provide accessible, accurate, and user-friendly tools to detect AI-generated content and help combat the spread of misinformation.</p>
+            </div>
+        </div>
+
+        <div class="about-section">
+            <h2 class="section-title">How It Works</h2>
+            <div class="section-content">
+                <p>Our platform uses state-of-the-art AI algorithms trained on extensive datasets of both genuine and synthetic media. When you upload content, our system analyzes hundreds of features including:</p>
+                <ul class="features-list" align="center">
+                    <li>Pixel-level inconsistencies</li>
+                    <li>Temporal anomalies in videos</li>
+                    <li>Metadata analysis</li>
+                    <li>Facial biometric verification</li>
+                    <li>Audio-visual synchronization checks</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="about-section">
+            <h2 class="section-title">Why Choose Us?</h2>
+            <div class="benefits-grid">
+                <div class="benefit-card">
+                    <h3 class="benefit-title">Advanced AI Technology</h3>
+                    <p class="benefit-description">Leverage cutting-edge machine learning models trained on diverse datasets to ensure high detection accuracy.</p>
+                </div>
+                
+                <div class="benefit-card">
+                    <h3 class="benefit-title">Easy to Use</h3>
+                    <p class="benefit-description">Simple drag-and-drop interface with no technical expertise required.</p>
+                </div>
+                
+                <div class="benefit-card">
+                    <h3 class="benefit-title">Real-Time Analysis</h3>
+                    <p class="benefit-description">Get instant results with quick processing times for both images and videos.</p>
+                </div>
+                
+                <div class="benefit-card">
+                    <h3 class="benefit-title">Privacy First</h3>
+                    <p class="benefit-description">All uploaded content is automatically deleted after analysis to ensure your data remains private.</p>
+                </div>
+                
+                <div class="benefit-card">
+                    <h3 class="benefit-title">Cross-Platform Support</h3>
+                    <p class="benefit-description">Compatible with multiple file formats and accessible from any modern device.</p>
+                </div>
+                
+                <div class="benefit-card">
+                    <h3 class="benefit-title">Continuous Improvement</h3>
+                    <p class="benefit-description">Our models receive regular updates to stay ahead of evolving deepfake technologies.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="about-section">
+            <h2 class="section-title">Join the Fight</h2>
+            <div class="section-content">
+                <p>We're dedicated to helping individuals and organizations worldwide verify digital content authenticity. By using DeepFake Detective, you contribute to a more transparent digital ecosystem.</p>
+            </div>
+        </div>
+    </main>
+</body>
+</html>
