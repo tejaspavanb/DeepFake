@@ -1,2 +1,0 @@
-# DeepFake
-Hackathon Project
