@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DeepFake Detective - Image Detection</title>
+    <style>
+        /* Reset and base styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f5;
+        }
+        
+        /* Navigation bar */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #3366ff;
+            padding: 1rem 2rem;
+            color: white;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .nav-logo {
+            display: flex;
+            align-items: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+        
+        .nav-logo svg {
+            margin-right: 10px;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 1.5rem;
+        }
+        
+        .nav-link {
+            color: white;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .nav-link.active {
+            font-weight: bold;
+            text-decoration: underline;
+        }
+        
+        /* Main content */
+        .main-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+        }
+        
+        .page-title {
+            font-size: 2rem;
+            color: #222;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+        
+        /* Upload section */
+        .upload-container {
+            background-color: white;
+            border-radius: 8px;
+            padding: 2rem;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            margin-bottom: 2rem;
+        }
+        
+        .upload-title {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: #222;
+        }
+        
+        .upload-description {
+            color: #555;
+            margin-bottom: 1.5rem;
+        }
+        
+        .dropzone {
+            border: 2px dashed #3366ff;
+            border-radius: 8px;
+            padding: 3rem;
+            text-align: center;
+            cursor: pointer;
+            margin-bottom: 1.5rem;
+            transition: background-color 0.3s;
+        }
+        
+        .dropzone:hover {
+            background-color: #f0f5ff;
+        }
+        
+        .dropzone-icon {
+            color: #3366ff;
+            margin-bottom: 1rem;
+        }
+        
+        .dropzone-text {
+            color: #555;
+            margin-bottom: 0.5rem;
+        }
+        
+        .dropzone-subtext {
+            color: #777;
+            font-size: 0.9rem;
+        }
+        
+        .file-input {
+            display: none;
+        }
+        
+        .upload-btn {
+            background-color: #3366ff;
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 4px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .upload-btn:hover {
+            background-color: #2952cc;
+        }
+        
+        /* Results section */
+        .results-container {
+            background-color: white;
+            border-radius: 8px;
+            padding: 2rem;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            display: none;
+        }
+        
+        .results-title {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: #222;
+        }
+        
+        .results-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+        
+        .results-image {
+            width: 100%;
+            border-radius: 8px;
+            border: 1px solid #eee;
+        }
+        
+        .results-analysis {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .analysis-header {
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            color: #222;
+        }
+        
+        .analysis-metric {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+        }
+        
+        .metric-label {
+            color: #555;
+        }
+        
+        .metric-value {
+            font-weight: bold;
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background-color: #eee;
+            border-radius: 4px;
+            margin-bottom: 1.5rem;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background-color: #3366ff;
+            width: 75%; /* This would be dynamic based on the model output */
+        }
+        
+        .analysis-result {
+            padding: 1rem;
+            border-radius: 8px;
+            margin-top: 1rem;
+            text-align: center;
+            font-weight: bold;
+        }
+        
+        .result-authentic {
+            background-color: #e6f7e6;
+            color: #2e7d32;
+        }
+        
+        .result-fake {
+            background-color: #ffebee;
+            color: #c62828;
+        }
+        
+        .result-uncertain {
+            background-color: #fff8e1;
+            color: #ff8f00;
+        }
+        
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .results-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="nav-logo">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 22C6.5 22 2 17.5 2 12C2 6.5 6.5 2 12 2C17.5 2 22 6.5 22 12C22 17.5 17.5 22 12 22Z" stroke="white" stroke-width="2"/>
+                <path d="M12 16C9.8 16 8 14.2 8 12C8 9.8 9.8 8 12 8C14.2 8 16 9.8 16 12C16 14.2 14.2 16 12 16Z" stroke="white" stroke-width="2"/>
+            </svg>
+            DeepFake Detective
+        </div>
+        <div class="nav-links">
+            <a href="#" class="nav-link active">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="4" y="4" width="16" height="16" rx="2" stroke="white" stroke-width="2"/>
+                    <circle cx="9" cy="9" r="2" stroke="white" stroke-width="2"/>
+                    <path d="M20 16L15 11L4 20" stroke="white" stroke-width="2"/>
+                </svg>
+                <span>Image Detection</span>
+            </a>
+            <a href="video.html" class="nav-link">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="4" y="4" width="16" height="16" rx="2" stroke="white" stroke-width="2"/>
+                    <path d="M10 9L15 12L10 15V9Z" stroke="white" stroke-width="2"/>
+                </svg>
+                <span>Video Detection</span>
+            </a>
+            <a href="#" class="nav-link">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="12" cy="12" r="10" stroke="white" stroke-width="2"/>
+                    <path d="M12 8V12M12 16V16" stroke="white" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+                <span>About</span>
+            </a>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <h1 class="page-title">Image Deepfake Detection</h1>
+        
+        <div class="upload-container">
+            <h2 class="upload-title">Upload an Image</h2>
+            <p class="upload-description">Our AI model will analyze the image to detect potential manipulation or synthetic generation.</p>
+            
+            <div class="dropzone" id="dropzone">
+                <div class="dropzone-icon">
+                    <svg width="64" height="64" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="4" y="4" width="16" height="16" rx="2" stroke="#3366ff" stroke-width="2"/>
+                        <circle cx="9" cy="9" r="2" stroke="#3366ff" stroke-width="2"/>
+                        <path d="M20 16L15 11L4 20" stroke="#3366ff" stroke-width="2"/>
+                        <path d="M12 4V12M8 8H16" stroke="#3366ff" stroke-width="2"/>
+                    </svg>
+                </div>
+                <p class="dropzone-text">Drag & drop your image here or click to browse</p>
+                <p class="dropzone-subtext">Supported formats: JPG, PNG (Max size: 10MB)</p>
+            </div>
+            
+            <input type="file" id="fileInput" class="file-input" accept="image/jpeg, image/png">
+            
+            <button class="upload-btn" id="uploadBtn">
+                Analyze Image
+            </button>
+        </div>
+        
+        <div class="results-container" id="resultsContainer">
+            <h2 class="results-title">Analysis Results</h2>
+            
+            <div class="results-grid">
+                <img src="/api/placeholder/400/320" alt="Analyzed image" class="results-image" id="analyzedImage">
+                
+                <div class="results-analysis">
+                    <h3 class="analysis-header">Deepfake Detection Metrics</h3>
+                    
+                    <div class="analysis-metric">
+                        <span class="metric-label">Authenticity Score:</span>
+                        <span class="metric-value">75%</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill"></div>
+                    </div>
+                    
+                    <div class="analysis-metric">
+                        <span class="metric-label">Face Manipulation Detection:</span>
+                        <span class="metric-value">Low</span>
+                    </div>
+                    
+                    <div class="analysis-metric">
+                        <span class="metric-label">Inconsistency Detection:</span>
+                        <span class="metric-value">Medium</span>
+                    </div>
+                    
+                    <div class="analysis-metric">
+                        <span class="metric-label">Metadata Analysis:</span>
+                        <span class="metric-value">Normal</span>
+                    </div>
+                    
+                    <div class="analysis-result result-uncertain">
+                        Uncertain - Minor anomalies detected
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const dropzone = document.getElementById('dropzone');
+            const fileInput = document.getElementById('fileInput');
+            const uploadBtn = document.getElementById('uploadBtn');
+            const resultsContainer = document.getElementById('resultsContainer');
+            const analyzedImage = document.getElementById('analyzedImage');
+            
+            // Handle click on dropzone
+            dropzone.addEventListener('click', function() {
+                fileInput.click();
+            });
+            
+            // Handle drag and drop
+            dropzone.addEventListener('dragover', function(e) {
+                e.preventDefault();
+                dropzone.style.backgroundColor = '#f0f5ff';
+            });
+            
+            dropzone.addEventListener('dragleave', function() {
+                dropzone.style.backgroundColor = '';
+            });
+            
+            dropzone.addEventListener('drop', function(e) {
+                e.preventDefault();
+                dropzone.style.backgroundColor = '';
+                
+                if (e.dataTransfer.files.length > 0) {
+                    fileInput.files = e.dataTransfer.files;
+                    // Show file name or preview
+                    handleFileSelect(e.dataTransfer.files[0]);
+                }
+            });
+            
+            // Handle file selection
+            fileInput.addEventListener('change', function() {
+                if (fileInput.files.length > 0) {
+                    handleFileSelect(fileInput.files[0]);
+                }
+            });
+            
+            function handleFileSelect(file) {
+                // Here you would typically validate the file
+                // For now, we'll just display the file name in the dropzone
+                dropzone.querySelector('.dropzone-text').textContent = `Selected: ${file.name}`;
+                
+                // Create a preview (optional)
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    // This would create a preview of the image
+                    // For demonstration, we'll just enable the upload button
+                    uploadBtn.disabled = false;
+                }
+                reader.readAsDataURL(file);
+            }
+            
+            // Handle upload button click
+            uploadBtn.addEventListener('click', function() {
+                if (fileInput.files.length === 0) {
+                    alert('Please select an image first.');
+                    return;
+                }
+                
+                // Mock the upload and analysis process
+                uploadBtn.textContent = 'Analyzing...';
+                uploadBtn.disabled = true;
+                
+                // In a real implementation, you would send the file to your server
+                // and integrate with your ML model here
+                
+                // Simulate a delay for analysis
+                setTimeout(function() {
+                    // Display the uploaded image
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        analyzedImage.src = e.target.result;
+                    }
+                    reader.readAsDataURL(fileInput.files[0]);
+                    
+                    // Show results
+                    resultsContainer.style.display = 'block';
+                    
+                    // Scroll to results
+                    resultsContainer.scrollIntoView({ behavior: 'smooth' });
+                    
+                    // Reset upload button
+                    uploadBtn.textContent = 'Analyze Image';
+                    uploadBtn.disabled = false;
+                }, 2000);
+            });
+        });
+    </script>
+</body>
+</html>
