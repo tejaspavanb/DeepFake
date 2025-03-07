@@ -4,7 +4,170 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DeepFake Detective</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <style>
+        /* Reset and base styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f5;
+        }
+        
+        /* Navigation bar */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #3366ff;
+            padding: 1rem 2rem;
+            color: white;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .nav-logo {
+            display: flex;
+            align-items: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+        
+        .nav-logo svg {
+            margin-right: 10px;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 1.5rem;
+        }
+        
+        .nav-link {
+            color: white;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        /* Main content */
+        .main-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+            text-align: center;
+        }
+        
+        .logo-container {
+            margin-bottom: 1.5rem;
+        }
+        
+        .main-title {
+            font-size: 2.5rem;
+            color: #222;
+            margin-bottom: 1rem;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            color: #555;
+            margin-bottom: 3rem;
+        }
+        
+        /* Service cards */
+        .services {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+        
+        .service-card {
+            background: white;
+            border-radius: 8px;
+            padding: 2rem;
+            width: 350px;
+            text-align: left;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            cursor: pointer;
+        }
+        
+        .service-card a {
+            display: block;
+            text-decoration: none;
+            color: inherit;
+        }
+        
+        .service-icon {
+            color: #3366ff;
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .service-title {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: #222;
+        }
+        
+        .service-description {
+            color: #555;
+            line-height: 1.5;
+        }
+        
+        /* Alert box */
+        .alert {
+            display: flex;
+            align-items: flex-start;
+            background-color: #fff9e6;
+            border-left: 4px solid #ffcc00;
+            padding: 1rem;
+            margin: 0 auto;
+            max-width: 900px;
+            text-align: left;
+            border-radius: 4px;
+        }
+        
+        .alert-icon {
+            color: #ffcc00;
+            margin-right: 1rem;
+            font-size: 1.2rem;
+        }
+        
+        .alert-content strong {
+            color: #b38600;
+        }
+        
+        .alert-content {
+            color: #664d00;
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .services {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .service-card {
+                width: 100%;
+                max-width: 350px;
+            }
+        }
+
+        /* For very small screens */
+        @media (max-width: 480px) {
+            .nav-links span {
+                display: none;
+            }
+            
+            .main-title {
+                font-size: 2rem;
+            }
+        }
+    </style>
 </head>
 <body>
     <nav class="navbar">
@@ -93,5 +256,6 @@
             </div>
         </div>
     </main>
+    
 </body>
 </html>
