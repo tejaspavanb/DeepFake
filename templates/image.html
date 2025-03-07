@@ -42,29 +42,76 @@
     </nav>
 
     <main class="main-content">
-        <h1 class="page-title">Image Deepfake Detection</h1>
+        <h1 class="page-title">Deepfake Image Detection</h1>
         
         <div class="upload-container">
             <h2 class="upload-title">Upload an Image</h2>
-            <p class="upload-description">Our AI model will analyze the image to detect potential manipulation or synthetic generation.</p>
+            <p class="upload-description">Upload any image to analyze for potential deepfake manipulation.</p>
             
-            <div class="dropzone" id="dropzone">
+            <div id="dropzone" class="dropzone">
                 <div class="dropzone-icon">
-                    <svg width="64" height="64" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <rect x="4" y="4" width="16" height="16" rx="2" stroke="#3366ff" stroke-width="2"/>
-                        <circle cx="9" cy="9" r="2" stroke="#3366ff" stroke-width="2"/>
-                        <path d="M20 16L15 11L4 20" stroke="#3366ff" stroke-width="2"/>
-                        <path d="M12 4V12M8 8H16" stroke="#3366ff" stroke-width="2"/>
+                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 15V3M12 3L7 8M12 3L17 8" stroke="#3366ff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M4 16V17C4 18.6569 5.34315 20 7 20H17C18.6569 20 20 18.6569 20 17V16" stroke="#3366ff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                     </svg>
                 </div>
-                <p class="dropzone-text">Drag & drop your image here or click to browse</p>
-                <p class="dropzone-subtext">Supported formats: JPG, PNG (Max size: 10MB)</p>
+                <p class="dropzone-text">Drag and drop your image here</p>
+                <p class="dropzone-subtext">Or click to browse files (JPG, PNG, WEBP)</p>
             </div>
             
-            <input type="file" id="fileInput" class="file-input" accept="image/jpeg, image/png">
-            <button class="upload-btn" id="uploadBtn">
-                Analyze Image
-            </button>
+            <input type="file" id="fileInput" class="file-input" accept="image/*">
+            <div style="text-align: center;">
+                <button id="uploadBtn" class="upload-btn" disabled>Analyze Image</button>
+            </div>
+        </div>
+        
+        <!-- Results container - will be shown after upload -->
+        <div id="resultsContainer" class="results-container">
+            <h2 class="results-title">Analysis Results</h2>
+            
+            <div class="results-grid">
+                <!-- Left side: Uploaded image -->
+                <div class="results-image-container">
+                    <img id="analyzedImage" src="{{ image_path if image_path else '' }}" alt="Analyzed Image" class="results-image">
+                </div>
+                
+                <!-- Right side: Analysis -->
+                <div class="results-analysis">
+                    <h3 class="analysis-header">Detection Verdict</h3>
+                    
+                    <div class="analysis-metric">
+                        <span class="metric-label">Confidence Score:</span>
+                        <span id="confidenceScore" class="metric-value">
+                            {% if result %}{{ result.confidence }}{% else %}--{% endif %}
+                        </span>
+                    </div>
+                    
+                    <div class="progress-bar">
+                        <div id="confidenceBar" class="progress-fill" style="width: {% if result %}{{ result.confidence * 100 }}%{% else %}0%{% endif %}"></div>
+                    </div>
+                    
+                    <div class="analysis-result {% if result %}{% if result.result == 'Real' %}result-authentic{% elif result.result == 'Fake' %}result-fake{% else %}result-uncertain{% endif %}{% endif %}">
+                        <span id="resultVerdict">{% if result %}{{ result.result }}{% else %}Awaiting analysis...{% endif %}</span>
+                    </div>
+                    
+                    <!-- Metadata section -->
+                    <div class="metadata-section">
+                        <h3 class="analysis-header">Image Metadata</h3>
+                        <table class="metadata-table">
+                            <tbody id="metadataTable">
+                                {% if result and result.metadata %}
+                                    {% for key, value in result.metadata.items() %}
+                                    <tr>
+                                        <td class="metadata-key">{{ key }}:</td>
+                                        <td class="metadata-value">{{ value }}</td>
+                                    </tr>
+                                    {% endfor %}
+                                {% endif %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
         </div>
     </main>
 

@@ -44,8 +44,8 @@ def predict_image(image_path):
     img = np.expand_dims(img, axis=0)  # Add batch dimension
 
     prediction = model.predict(img)[0][0]
-    confidence = prediction if prediction > 0.5 else (1 - prediction)
-    result = "Fake" if prediction > 0.5 else "Real"
+    confidence = prediction if prediction > 0.6 else (1 - prediction)
+    result = "Fake" if prediction > 0.6 else "Real"
 
     print(f"\n🔍 **Deepfake Detection Result**")
     print(f"🖼️ Image: {image_path}")

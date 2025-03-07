@@ -49,30 +49,33 @@ def analyze_image():
             'metadata': prediction["metadata"]
         })
     
-
 @app.route('/analyze-video', methods=['POST'])
 def analyze_video():
-    if 'file' not in request.files:
-        return jsonify({'error': 'No file uploaded'})
-    
-    file = request.files['file']
-    if file.filename == '':
-        return jsonify({'error': 'No file selected'})
-    
-    if file:
-        filename = secure_filename(file.filename)
-        filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-        file.save(filepath)
+    try:
+        if 'file' not in request.files:
+            return jsonify({'error': 'No file uploaded'})
         
-        # Call predict_video from prog.py
-        video_analysis = predict_video(filepath)
+        file = request.files['file']
+        if file.filename == '':
+            return jsonify({'error': 'No file selected'})
         
-        return jsonify({
-            'fake_frames': video_analysis["fake_frames"],
-            'real_frames': video_analysis["real_frames"],
-            'final_verdict': video_analysis["final_verdict"],
-            'detection_accuracy': f"{video_analysis['detection_accuracy']:.2f}%"
-        })
+        if file:
+            filename = secure_filename(file.filename)
+            filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+            file.save(filepath)
+            
+            # Call predict_video from prog.py
+            video_analysis = predict_video(filepath)
+            
+            return jsonify({
+                'fake_frames': video_analysis["fake_frames"],
+                'real_frames': video_analysis["real_frames"],
+                'final_verdict': video_analysis["final_verdict"],
+                'detection_accuracy': f"{video_analysis['detection_accuracy']:.2f}%"
+            })
+    except Exception as e:
+        return jsonify({'error': str(e)})
+
 
 @app.route('/upload-image', methods=['POST'])
 def upload_image():

@@ -42,25 +42,92 @@
     </nav>
 
     <main class="main-content">
-        <h1 class="page-title">Video Deepfake Detection</h1>
+        <h1 class="page-title">Deepfake Video Detection</h1>
+        
         <div class="upload-container">
             <h2 class="upload-title">Upload a Video</h2>
-            <p class="upload-description">Our AI model will analyze the video to detect potential manipulation or synthetic generation.</p>
-            <div class="dropzone" id="dropzone">
+            <p class="upload-description">Upload any video to analyze for potential deepfake manipulation.</p>
+            
+            <div id="dropzone" class="dropzone">
                 <div class="dropzone-icon">
-                    <svg width="64" height="64" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <rect x="4" y="4" width="16" height="16" rx="2" stroke="#3366ff" stroke-width="2"/>
-                        <path d="M10 9L15 12L10 15V9Z" stroke="#3366ff" stroke-width="2"/>
+                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 15V3M12 3L7 8M12 3L17 8" stroke="#3366ff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M4 16V17C4 18.6569 5.34315 20 7 20H17C18.6569 20 20 18.6569 20 17V16" stroke="#3366ff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                     </svg>
                 </div>
-                <p class="dropzone-text">Drag & drop your video here or click to browse</p>
-                <p class="dropzone-subtext">Supported formats: MP4, AVI (Max size: 50MB)</p>
+                <p class="dropzone-text">Drag and drop your video here</p>
+                <p class="dropzone-subtext">Or click to browse files (MP4, MOV, AVI)</p>
             </div>
-           
-            <input type="file" id="fileInput" class="file-input" accept="video/mp4, video/avi">
-            <button class="upload-btn" id="uploadBtn">
-                Analyze Video
-            </button>
+            
+            <input type="file" id="fileInput" class="file-input" accept="video/*">
+            <div style="text-align: center;">
+                <button id="uploadBtn" class="upload-btn" disabled>Analyze Video</button>
+            </div>
+        </div>
+        
+        <!-- Results container - will be shown after upload -->
+        <div id="resultsContainer" class="results-container">
+            <h2 class="results-title">Analysis Results</h2>
+            
+            <div class="results-grid">
+                <!-- Left side: Uploaded video thumbnail/player -->
+                <div class="results-video-container">
+                    <video id="analyzedVideo" src="{{ video_path if video_path else '' }}" controls class="results-video" poster="{{ url_for('static', filename='img/video-placeholder.jpg') }}"></video>
+                    <div class="video-info">
+                        <p><strong>Note:</strong> Frame-by-frame analysis has been performed. Summary is shown here.</p>
+                    </div>
+                </div>
+                
+                <!-- Right side: Analysis -->
+                <div class="results-analysis">
+                    <h3 class="analysis-header">Detection Verdict</h3>
+                    
+                    <div class="frame-statistics">
+                        <div class="statistic-item">
+                            <span class="statistic-label">Real Frames:</span>
+                            <span id="realFrames" class="statistic-value">
+                                {% if result %}{{ result.real_frames }}{% else %}--{% endif %}
+                            </span>
+                        </div>
+                        <div class="statistic-item">
+                            <span class="statistic-label">Fake Frames:</span>
+                            <span id="fakeFrames" class="statistic-value">
+                                {% if result %}{{ result.fake_frames }}{% else %}--{% endif %}
+                            </span>
+                        </div>
+                    </div>
+                    
+                    <div class="analysis-metric">
+                        <span class="metric-label">Detection Accuracy:</span>
+                        <span id="accuracyScore" class="metric-value">
+                            {% if result %}{{ result.detection_accuracy }}{% else %}--{% endif %}
+                        </span>
+                    </div>
+                    
+                    <div class="progress-bar">
+                        <div id="accuracyBar" class="progress-fill" style="width: {% if result %}{{ result.detection_accuracy|float }}%{% else %}0%{% endif %}"></div>
+                    </div>
+                    
+                    <div class="analysis-result {% if result %}{% if result.final_verdict == 'Real' %}result-authentic{% elif result.final_verdict == 'Fake' %}result-fake{% else %}result-uncertain{% endif %}{% endif %}">
+                        <span id="resultVerdict">{% if result %}{{ result.final_verdict }}{% else %}Awaiting analysis...{% endif %}</span>
+                    </div>
+                    
+                    <!-- Processing information -->
+                    <div class="processing-info">
+                        <h3 class="analysis-header">Processing Information</h3>
+                        <div class="info-item">
+                            <span class="info-label">Frames Analyzed:</span>
+                            <span id="framesAnalyzed" class="info-value">
+                                {% if result %}{{ result.real_frames + result.fake_frames }}{% else %}--{% endif %}
+                            </span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Analysis Method:</span>
+                            <span class="info-value">Frame-by-frame deep learning detection</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </main>
 

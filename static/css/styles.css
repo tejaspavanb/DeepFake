@@ -239,3 +239,118 @@ body {
         font-size: 2rem;
     }
 }
+/* Additional styles for results sections */
+
+/* Image results specific */
+.metadata-section {
+    margin-top: 2rem;
+    border-top: 1px solid #eee;
+    padding-top: 1rem;
+}
+
+.metadata-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.metadata-table tr {
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.metadata-table tr:last-child {
+    border-bottom: none;
+}
+
+.metadata-key {
+    padding: 0.5rem 0;
+    color: #555;
+    font-weight: 500;
+    width: 40%;
+}
+
+.metadata-value {
+    padding: 0.5rem 0;
+    color: #333;
+}
+
+/* Video results specific */
+.results-video {
+    width: 100%;
+    border-radius: 8px;
+    border: 1px solid #eee;
+    background-color: #f5f5f5;
+}
+
+.video-info {
+    margin-top: 0.5rem;
+    font-size: 0.9rem;
+    color: #666;
+}
+
+.frame-statistics {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+    background-color: #f5f7ff;
+    padding: 1rem;
+    border-radius: 6px;
+}
+
+.statistic-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.statistic-label {
+    font-size: 0.9rem;
+    color: #555;
+    margin-bottom: 0.3rem;
+}
+
+.statistic-value {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #3366ff;
+}
+
+.processing-info {
+    margin-top: 2rem;
+    border-top: 1px solid #eee;
+    padding-top: 1rem;
+}
+
+.info-item {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.5rem;
+}
+
+.info-label {
+    color: #555;
+}
+
+.info-value {
+    font-weight: 500;
+}
+
+/* Loading indicator styles */
+.loading-indicator {
+    display: none;
+    text-align: center;
+    margin: 2rem 0;
+}
+
+.spinner {
+    width: 40px;
+    height: 40px;
+    border: 4px solid rgba(51, 102, 255, 0.2);
+    border-radius: 50%;
+    border-top-color: #3366ff;
+    animation: spin 1s ease-in-out infinite;
+    margin: 0 auto 1rem;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
