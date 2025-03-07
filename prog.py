@@ -57,7 +57,11 @@ def predict_image(image_path):
     for key, value in metadata.items():
         print(f"🔹 {key}: {value}")
 
-    return result
+    return {
+        "result": result,
+        "confidence": confidence,
+        "metadata": extract_metadata(image_path)
+    }
 
 # Function to process a video and detect deepfakes frame by frame
 def predict_video(video_path, frame_interval=10):
@@ -107,6 +111,11 @@ def predict_video(video_path, frame_interval=10):
     print(f"Real Frames: {real_frames}")
     print(f"Final Verdict: {'Fake' if fake_frames > real_frames else 'Real'}")
     print(f"Detection Accuracy: {accuracy:.2f}%")
+    return {
+        "result": result,
+        "confidence": accuracy,
+        "metadata": extract_metadata(video_path)
+    }
 
 # Main function to handle user input
 def main():

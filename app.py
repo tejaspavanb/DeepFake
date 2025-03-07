@@ -1,7 +1,7 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, jsonify
 import os
 from werkzeug.utils import secure_filename
-from prog import predict_image, predict_video
+from prog import predict_image, predict_video, extract_metadata
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = 'static/uploads/'
@@ -25,6 +25,54 @@ def video():
 @app.route('/about')
 def about():
     return render_template('about.html')
+
+@app.route('/analyze-image', methods=['POST'])
+def analyze_image():
+    if 'file' not in request.files:
+        return jsonify({'error': 'No file uploaded'})
+    
+    file = request.files['file']
+    if file.filename == '':
+        return jsonify({'error': 'No file selected'})
+    
+    if file:
+        filename = secure_filename(file.filename)
+        filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+        file.save(filepath)
+        
+        # Call predict_image from prog.py
+        prediction = predict_image(filepath)  # This is from prog.py
+        
+        return jsonify({
+            'result': prediction["result"],
+            'confidence': f"{prediction['confidence'] * 100:.2f}%",
+            'metadata': prediction["metadata"]
+        })
+    
+
+@app.route('/analyze-video', methods=['POST'])
+def analyze_video():
+    if 'file' not in request.files:
+        return jsonify({'error': 'No file uploaded'})
+    
+    file = request.files['file']
+    if file.filename == '':
+        return jsonify({'error': 'No file selected'})
+    
+    if file:
+        filename = secure_filename(file.filename)
+        filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+        file.save(filepath)
+        
+        # Call predict_video from prog.py
+        video_analysis = predict_video(filepath)
+        
+        return jsonify({
+            'fake_frames': video_analysis["fake_frames"],
+            'real_frames': video_analysis["real_frames"],
+            'final_verdict': video_analysis["final_verdict"],
+            'detection_accuracy': f"{video_analysis['detection_accuracy']:.2f}%"
+        })
 
 @app.route('/upload-image', methods=['POST'])
 def upload_image():
